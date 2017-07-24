@@ -21,12 +21,14 @@ public class GameController : MonoBehaviour
     float waveTimer;
     bool startWaveTimer;
     int enemyCountIncrement = 1;
-    List<Color> colors = new List<Color>() { Color.yellow, Color.cyan, Color.magenta };
+    List<Color> colors = new List<Color>() { Color.green, Color.red, Color.blue, Color.black, Color.white };
     // Use this for initialization
     void Start()
     {
         //SpawnWave();
-
+        colors.Add(Color.red + Color.green);
+        colors.Add(Color.red + Color.blue);
+        colors.Add(Color.green + Color.blue);
     }
 
     IEnumerator SpawnWave()
@@ -39,20 +41,14 @@ public class GameController : MonoBehaviour
             Vector3 spawnPosition = new Vector3(Random.Range(-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
             Quaternion spawnRotation = Quaternion.identity;
             GameObject go = Instantiate(enemy, spawnPosition, spawnRotation);
-            int number = Random.Range(0, 3);
-            go.GetComponent<MeshRenderer>().material.color = colors[number];
-            if (number == 0)
-            {
-                go.tag = "Color.yellow";
-            }
-            if (number == 1)
-            {
-                go.tag = "Color.cyan";
-            }
-            if (number == 2)
-            {
-                go.tag = "Color.magenta";
-            }
+            int number = Random.Range(0, colors.Count);
+            Color color = colors[number];
+            color.a = 1;
+            go.GetComponent<MeshRenderer>().material.color = color;
+            //go.tag = color.ToString();
+            //Debug.Log(color.ToString());
+            go.GetComponent<BallColor>().ballColor = go.GetComponent<MeshRenderer>().material.color;
+            //Debug.Log(go.GetComponent<MeshRenderer>().material.color.ToString());
             yield return new WaitForSeconds(spawnWait);
         }
         startWaveTimer = true;
@@ -93,6 +89,7 @@ public class GameController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (startwave)
         {
             StartCoroutine(SpawnWave());

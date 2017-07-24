@@ -6,7 +6,8 @@ public class PlayerBallMoving : MonoBehaviour {
 
     public Vector3 Target;
     public float Speed;
-    Vector2 vector;
+    public bool startMoving;
+    public Vector2 vector;
 	// Use this for initialization
 	void Start () {
         vector = Target - transform.position;
@@ -15,6 +16,9 @@ public class PlayerBallMoving : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        transform.position += new Vector3(vector.x * Speed * Time.deltaTime, vector.y * Speed * Time.deltaTime, 0);
-	}
+        if (startMoving)
+        {
+            transform.position += new Vector3(vector.x * Speed * Time.deltaTime, vector.y * Speed * Time.deltaTime, 0);
+        }
+    }
 }
