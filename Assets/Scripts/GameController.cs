@@ -22,7 +22,7 @@ public class GameController : MonoBehaviour
     bool startWaveTimer;
     int enemyCountIncrement = 1;
     // List<Color> colors = new List<Color>() { Color.green, Color.red, Color.blue, Color.black, Color.white };
-    List<Color> colors = new List<Color>() { Color.magenta, new Color(1,1,0,1), Color.cyan, Color.black, new Color(2,2,2,3) };
+    List<Color> colors = new List<Color>() { Color.magenta, new Color(1,1,0,1), Color.cyan, new Color(-1,-1,-1,-2), Color.white };
     // Use this for initialization
     void Start()
     {
@@ -31,9 +31,9 @@ public class GameController : MonoBehaviour
         /* colors.Add(Color.red + Color.green);
          colors.Add(Color.red + Color.blue);
          colors.Add(Color.green + Color.blue);*/
-        colors.Add(Color.magenta + new Color(1,1,0,1));
-        colors.Add(Color.magenta + Color.cyan);
-        colors.Add(new Color(1,1,0,1) + Color.cyan);
+        colors.Add(Color.white - new Color(1,1,0,1));
+        colors.Add(Color.white - Color.cyan);
+        colors.Add(Color.white - Color.magenta);
     }
 
     IEnumerator SpawnWave()
