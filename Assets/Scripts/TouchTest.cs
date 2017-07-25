@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class TouchTest : MonoBehaviour {
+public class TouchTest : MonoBehaviour
+{
 
-	// Use this for initialization
+    // Use this for initialization
 
     public float speed = 0.1F;
     public GameObject Player;
@@ -20,15 +21,16 @@ public class TouchTest : MonoBehaviour {
         {
             Quaternion spawnRotation = Quaternion.identity;
             playerBall = Instantiate(Player, new Vector3(spawnPosition.x, spawnPosition.y, spawnPosition.z), spawnRotation);
-            playerBall.GetComponent<MeshRenderer>().material.color = Color.black;
-            Debug.Log("Player Created");
+            //playerBall.GetComponent<MeshRenderer>().material.color = Color.black;
+            playerBall.GetComponent<MeshRenderer>().material.color = Color.white;
+            //Debug.Log("Player Created");
         }
 
         Vector3 target = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
         if (Input.touchCount > 0 && Input.GetTouch(0).phase == TouchPhase.Moved)
         {
-           // Vector3 target = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).deltaPosition);
+            // Vector3 target = Camera.main.ScreenToWorldPoint(Input.GetTouch(0).deltaPosition);
             transform.position = new Vector3(target.x, target.y, transform.position.z);
         }
 
@@ -46,19 +48,18 @@ public class TouchTest : MonoBehaviour {
             playerBalls[playerBalls.Length - 1].GetComponent<PlayerBallMoving>().vector = playerBalls[playerBalls.Length - 1].GetComponent<PlayerBallMoving>().Target - playerBalls[playerBalls.Length - 1].transform.position;
             playerBalls[playerBalls.Length - 1].GetComponent<PlayerBallMoving>().vector.Normalize();
 
-            Color ballColor = Color.black;
-            if (buttons.Count > 0)
-            {
-                for (int i = 0; i < buttons.Count; i++)
-                {
-                    ballColor += buttons[i].image.color;
-                    
-                }
-               
-            }
-            ballColor.a = 1;
-            playerBall.GetComponent<MeshRenderer>().material.color = ballColor;
-            playerBall.tag = ballColor.ToString(); 
+            //Color ballColor = Color.black;
+            Color ballColor = Color.white;
+            //if (buttons.Count > 0)
+            //{
+            //    for (int i = 0; i < buttons.Count; i++)
+            //    {
+            //        ballColor += buttons[i].image.color;
+            //    }
+            //}
+            //ballColor.a = 1;
+            //playerBall.GetComponent<MeshRenderer>().material.color = ballColor;
+            //playerBall.tag = ballColor.ToString();
             playerBall.GetComponent<BallColor>().ballColor = playerBall.GetComponent<MeshRenderer>().material.color;
             //Debug.Log(ballColor.ToString());
 

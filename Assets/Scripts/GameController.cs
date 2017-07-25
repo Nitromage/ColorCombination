@@ -21,8 +21,8 @@ public class GameController : MonoBehaviour
     float waveTimer;
     bool startWaveTimer;
     int enemyCountIncrement = 1;
-    // List<Color> colors = new List<Color>() { Color.green, Color.red, Color.blue, Color.black, Color.white };
-    List<Color> colors = new List<Color>() { Color.magenta, new Color(1,1,0,1), Color.cyan, new Color(-1,-1,-1,-2), Color.white };
+    //List<Color> colors = new List<Color>() { Color.green, Color.red, Color.blue, Color.black, Color.white };
+    List<Color> colors = new List<Color>() { Color.blue, Color.green, new Color(1, 1, 0, 1), new Color(1, 0.5f, 0, 1), Color.red, Color.magenta, Color.white, Color.black };
     // Use this for initialization
     void Start()
     {
@@ -51,6 +51,10 @@ public class GameController : MonoBehaviour
             color.a = 1;
             go.GetComponent<MeshRenderer>().material.color = color;
             //go.tag = color.ToString();
+            if (color == Color.black)
+            {
+                Debug.Log(color.ToString());
+            }
             //Debug.Log(color.ToString());
             go.GetComponent<BallColor>().ballColor = go.GetComponent<MeshRenderer>().material.color;
             //Debug.Log(go.GetComponent<MeshRenderer>().material.color.ToString());
