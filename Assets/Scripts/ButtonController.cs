@@ -27,7 +27,7 @@ public class ButtonController : MonoBehaviour {
             buttonsPressed.Add(button);
             Color color = button.GetComponent<Image>().color;
             button.GetComponent<Image>().color = new Color(color.r, color.g, color.b, 0.5f);
-            GameObject.FindGameObjectWithTag("GameController").GetComponent<TouchTest>().playerBall.GetComponent<MeshRenderer>().material.color += color;
+            GameObject.FindGameObjectWithTag("GameController").GetComponent<TouchTest>().playerBall.GetComponent<MeshRenderer>().material.color -= color;
         }
     }
 

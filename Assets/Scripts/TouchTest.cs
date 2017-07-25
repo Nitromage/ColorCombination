@@ -52,7 +52,9 @@ public class TouchTest : MonoBehaviour {
                 for (int i = 0; i < buttons.Count; i++)
                 {
                     ballColor += buttons[i].image.color;
+                    
                 }
+               
             }
             ballColor.a = 1;
             playerBall.GetComponent<MeshRenderer>().material.color = ballColor;
