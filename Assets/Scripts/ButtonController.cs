@@ -80,6 +80,11 @@ public class ButtonController : MonoBehaviour {
         SceneManager.LoadScene("Scene");
     }
 
+    public void Option()
+    {
+        SceneManager.LoadScene("Options");
+    }
+
     public void QuitGame()
     {
         Application.Quit();
