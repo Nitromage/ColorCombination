@@ -17,12 +17,16 @@ public class DestroyOnContact : MonoBehaviour {
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.GetComponent<BallColor>().ballColor == gameObject.GetComponent<BallColor>().ballColor)
+        if (other.gameObject.GetComponent<BallColor>() != null)
         {
-            Destroy(gameObject);
-            Destroy(other.gameObject);
-            ScoreManager.score += 10;
+            if (other.gameObject.GetComponent<BallColor>().ballColor == gameObject.GetComponent<BallColor>().ballColor)
+            {
+                Destroy(gameObject);
+                Destroy(other.gameObject);
+                ScoreManager.score += 10;
+            }
         }
+
         //if (other.tag == gameObject.tag)
         //{
         //    Destroy(gameObject);
