@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameController : MonoBehaviour
@@ -14,26 +15,46 @@ public class GameController : MonoBehaviour
     public float waveTextTimer;
     public Text Wavetext;
     public float TimeBetweenWaves;
-    public Increment inc = new Increment();
+    //public EasyIncrement EasyInc;
+    //public HardIncrement HardInc;
+    public EasyIncrement EasyInc;
+    public HardIncrement HardInc;
+    public int Difficulty;
+    public int TestStartWave;
+    public GameObject player;
+    List<Color> ColorList;
+    
 
-    int waveCount = 1;
+    int waveCount;
     bool startwave = true;
     float waveTimer;
     bool startWaveTimer;
     int enemyCountIncrement = 1;
-    //List<Color> colors = new List<Color>() { Color.green, Color.red, Color.blue, Color.black, Color.white };
-    List<Color> colors = new List<Color>() { Color.blue, Color.green, new Color(1, 1, 0, 1), new Color(1, 0.5f, 0, 1), Color.red, Color.magenta, Color.white, Color.black };
+    int enemySpawnCount = 1;
+    List<Color> rgbEasy = new List<Color>() { Color.green, Color.red, Color.blue, Color.black };
+    List<Color> rgbHard = new List<Color>() { Color.green, Color.red, Color.blue, Color.black, Color.white, (Color.red + Color.gray), (Color.red + Color.blue), (Color.green + Color.blue) };
+
+    List<Color> rybEasy = new List<Color>() { Color.red, new Color(1, 1, 0, 1), Color.blue, Color.white };
+    List<Color> rybHard = new List<Color>() { Color.red, new Color(1, 1, 0, 1), Color.blue, Color.white, new Color(1, 0.5f, 0, 1), Color.black, Color.magenta, Color.green };
+
+    void Awake()
+    {
+        waveCount = TestStartWave;
+        Difficulty = PlayerPrefs.GetInt("Difficulty");
+        PlayerPrefs.DeleteKey("Difficulty");
+        if (Difficulty == 0)
+        {
+            ColorList = rybEasy;
+        }
+        else
+        {
+            ColorList = rybHard;
+        }
+    }
     // Use this for initialization
     void Start()
     {
-        
-        //SpawnWave();
-        /* colors.Add(Color.red + Color.green);
-         colors.Add(Color.red + Color.blue);
-         colors.Add(Color.green + Color.blue);*/
-        colors.Add(Color.white - new Color(1,1,0,1));
-        colors.Add(Color.white - Color.cyan);
-        colors.Add(Color.white - Color.magenta);
+
     }
 
     IEnumerator SpawnWave()
@@ -43,45 +64,94 @@ public class GameController : MonoBehaviour
         yield return new WaitForSeconds(startWait);
         for (int i = 0; i < enemyCount; i++)
         {
-            Vector3 spawnPosition = new Vector3(Random.Range(-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
-            Quaternion spawnRotation = Quaternion.identity;
-            GameObject go = Instantiate(enemy, spawnPosition, spawnRotation);
-            int number = Random.Range(0, colors.Count);
-            Color color = colors[number];
-            color.a = 1;
-            go.GetComponent<MeshRenderer>().material.color = color;
-            //go.tag = color.ToString();
-            if (color == Color.black)
+            for (int x = 0; x < enemySpawnCount; x++)
             {
-                Debug.Log(color.ToString());
+                Vector3 spawnPosition = new Vector3(Random.Range(-spawnValues.x, spawnValues.x), spawnValues.y, spawnValues.z);
+                Quaternion spawnRotation = Quaternion.identity;
+                GameObject go = Instantiate(enemy, spawnPosition, spawnRotation);
+                int number = Random.Range(0, ColorList.Count);
+                Color color = ColorList[number];
+                color.a = 1;
+                go.GetComponent<MeshRenderer>().material.color = color;
+                go.GetComponent<BallColor>().ballColor = go.GetComponent<MeshRenderer>().material.color;
             }
-            //Debug.Log(color.ToString());
-            go.GetComponent<BallColor>().ballColor = go.GetComponent<MeshRenderer>().material.color;
-            //Debug.Log(go.GetComponent<MeshRenderer>().material.color.ToString());
             yield return new WaitForSeconds(spawnWait);
         }
         startWaveTimer = true;
-        WaveIncrement();
+        if (Difficulty == 0)
+        {
+            EasyWaveIncrement();
+        }
+        else HardWaveIncrement();
     }
 
-    void WaveIncrement()
+    void EasyWaveIncrement()
     {
         waveCount++;
         Wavetext.text = "Wave: " + waveCount.ToString();
 
         if (waveCount % 2 == 0)
         {
-            enemyCount += inc.EnemyCountInc;
-            inc.EnemyCountInc++;
+            enemyCount += EasyInc.EnemyCountInc;
+            EasyInc.EnemyCountInc++;
         }
         else
         {
-            spawnWait -= inc.SpawnWaitInc;
-            TimeBetweenWaves -= inc.TimeBetweenWavesInc;
+            if (!(spawnWait < 0.2f))
+            {
+                spawnWait -= EasyInc.SpawnWaitInc;
+            }
+            if (TimeBetweenWaves != 0)
+            {
+                TimeBetweenWaves -= EasyInc.TimeBetweenWavesInc;
+            }
+            if (TimeBetweenWaves < 0)
+            {
+                TimeBetweenWaves = 0;
+            }
         }
         if (waveCount % 5 == 0)
         {
-            enemy.GetComponent<Moving>().speed += inc.EnemySpeedInc;
+            enemy.GetComponent<Moving>().EasySpeed += EasyInc.EnemySpeedInc;
+        }
+        if (waveCount % 10 == 0)
+        {
+            enemySpawnCount++;
+        }
+    }
+
+    void HardWaveIncrement()
+    {
+        waveCount++;
+        Wavetext.text = "Wave: " + waveCount.ToString();
+
+        if (waveCount % 2 == 0)
+        {
+            enemyCount += HardInc.EnemyCountInc;
+            HardInc.EnemyCountInc++;
+        }
+        else
+        {
+            if (!(spawnWait < 0.2f))
+            {
+                spawnWait -= HardInc.SpawnWaitInc;
+            }
+            if (TimeBetweenWaves != 0)
+            {
+                TimeBetweenWaves -= HardInc.TimeBetweenWavesInc;
+            }
+            if (TimeBetweenWaves < 0)
+            {
+                TimeBetweenWaves = 0;
+            }
+        }
+        if (waveCount % 5 == 0)
+        {
+            enemy.GetComponent<Moving>().HardSpeed += HardInc.EnemySpeedInc;
+        }
+        if (waveCount % 10 == 0)
+        {
+            enemySpawnCount++;
         }
     }
 
@@ -113,10 +183,23 @@ public class GameController : MonoBehaviour
             startwave = true;
             startWaveTimer = false;
         }
+        if (player.GetComponent<PlayerHealth>().CurrentHealth == 0)
+        {
+            SceneManager.LoadScene("Menu");
+        }
     }
 
     [System.Serializable]
-    public class Increment
+    public class EasyIncrement
+    {
+        public float EnemySpeedInc;
+        public int EnemyCountInc;
+        public float TimeBetweenWavesInc;
+        public float SpawnWaitInc;
+    }
+
+    [System.Serializable]
+    public class HardIncrement
     {
         public float EnemySpeedInc;
         public int EnemyCountInc;
